@@ -37,8 +37,15 @@ struct tsens_device {
 	uint32_t			sensor_num;
 };
 
+<<<<<<< HEAD
 int32_t tsens_get_sensor_temp(int sensor_num, unsigned long *temp);
 int32_t tsens_get_temp(struct tsens_device *dev, unsigned long *temp);
 int msm_tsens_early_init(struct tsens_platform_data *pdata);
 
 #endif 
+=======
+int32_t tsens_get_temp(struct tsens_device *dev, unsigned long *temp);
+int msm_tsens_early_init(struct tsens_platform_data *pdata);
+
+#endif /*MSM_TSENS_H */
+>>>>>>> d5db3e3... thermal: msm8960_tsens: Read TSENS temperature
