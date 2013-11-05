@@ -1763,6 +1763,18 @@ config MSM_CPU_AVS
 	  in Qualcomm ARMv7 CPUs. It adjusts the voltage for each frequency
 	  based on feedback from three ring oscillators in the CPU.
 
+config CPU_OVERCLOCK
+	bool "Enable CPU Overclocking"
+	default n
+	help
+	  Krait overclocking
+
+config CPU_UNDERCLOCK
+	bool "Enable CPU Underclocking"
+	default n
+	help
+	  Krait underclocking
+
 config CPU_VOLTAGE_TABLE
 	bool "Enable CPU Voltage Table via sysfs for adjustements"
 	default n
