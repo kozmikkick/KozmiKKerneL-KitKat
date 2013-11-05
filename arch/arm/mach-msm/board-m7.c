@@ -3887,6 +3887,26 @@ static struct mdm_platform_data mdm_platform_data = {
 	.ramdump_timeout_ms = 120000,
 };
 
+#ifdef CONFIG_BRICKED_THERMAL
+static struct msm_thermal_data msm_thermal_pdata = {
+	.sensor_id = 0,
+	.poll_ms = 400,
+	.shutdown_temp = 83,
+
+	.allowed_max_high = 79,
+	.allowed_max_low = 74,
+	.allowed_max_freq = 384000,
+
+	.allowed_mid_high = 76,
+	.allowed_mid_low = 71,
+	.allowed_mid_freq = 918000,
+
+	.allowed_low_high = 74,
+	.allowed_low_low = 68,
+	.allowed_low_freq = 1566000,
+};
+#endif
+
 static int __init check_dq_setup(char *str)
 {
 	int i = 0;
@@ -5564,7 +5584,11 @@ static void __init m7_cdp_init(void)
 {
 	pr_info("%s: init starts\r\n", __func__);
 	tsens_tm_init_driver();
+#ifdef CONFIG_BRICKED_THERMAL
+	msm_thermal_init(&msm_thermal_pdata);
+#else
 	msm_thermal_device_init();
+#endif
 	m7_common_init();
 	ethernet_init();
 	msm_rotator_set_split_iommu_domain();
