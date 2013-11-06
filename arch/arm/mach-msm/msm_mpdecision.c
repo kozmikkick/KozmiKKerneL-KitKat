@@ -23,6 +23,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include "msm_mpdecision.h"
 #include <linux/earlysuspend.h>
 #include <linux/init.h>
 #include <linux/cpufreq.h>
@@ -42,45 +43,8 @@
 
 #define DEBUG 0
 
-#define MPDEC_TAG                       "[MPDEC]: "
-#define MSM_MPDEC_STARTDELAY            20000
-#define MSM_MPDEC_DELAY                 130
-#define MSM_MPDEC_PAUSE                 10000
-#define MSM_MPDEC_IDLE_FREQ             486000
-#ifdef CONFIG_MSM_MPDEC_INPUTBOOST_CPUMIN
-#define MSM_MPDEC_BOOSTTIME             1000
-#define MSM_MPDEC_BOOSTFREQ_CPU0        960000
-#define MSM_MPDEC_BOOSTFREQ_CPU1        960000
-#define MSM_MPDEC_BOOSTFREQ_CPU2        729600
-#define MSM_MPDEC_BOOSTFREQ_CPU3        576000
-#endif
-
-enum {
-    MSM_MPDEC_DISABLED = 0,
-    MSM_MPDEC_IDLE,
-    MSM_MPDEC_DOWN,
-    MSM_MPDEC_UP,
-};
-
-struct msm_mpdec_cpudata_t {
-    struct mutex hotplug_mutex;
-    int online;
-    int device_suspended;
-    cputime64_t on_time;
-    cputime64_t on_time_total;
-    long long unsigned int times_cpu_hotplugged;
-    long long unsigned int times_cpu_unplugged;
-#ifdef CONFIG_MSM_MPDEC_INPUTBOOST_CPUMIN
-    struct mutex boost_mutex;
-    struct mutex unboost_mutex;
-    unsigned long int norm_min_freq;
-    unsigned long int boost_freq;
-    cputime64_t boost_until;
-    bool is_boosted;
-    bool revib_wq_running;
-#endif
-};
-static DEFINE_PER_CPU(struct msm_mpdec_cpudata_t, msm_mpdec_cpudata);
+DEFINE_PER_CPU(struct msm_mpdec_cpudata_t, msm_mpdec_cpudata);
+EXPORT_PER_CPU_SYMBOL_GPL(msm_mpdec_cpudata);
 
 static struct delayed_work msm_mpdec_work;
 static struct workqueue_struct *msm_mpdec_workq;
