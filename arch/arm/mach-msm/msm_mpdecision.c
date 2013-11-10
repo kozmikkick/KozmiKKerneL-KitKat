@@ -195,9 +195,7 @@ static int mp_decision(void) {
     if (state == MSM_MPDEC_DISABLED)
         return MSM_MPDEC_DISABLED;
 
-    current_time = ktime_to_ms(ktime_get());
-    if (current_time <= msm_mpdec_tuners_ins.startdelay)
-        return MSM_MPDEC_IDLE;
+	current_time = ktime_to_ms(ktime_get());
 
     if (first_call) {
         first_call = false;
@@ -248,9 +246,6 @@ static int mp_decision(void) {
 static void msm_mpdec_work_thread(struct work_struct *work) {
     unsigned int cpu = nr_cpu_ids;
     bool suspended = false;
-
-    if (ktime_to_ms(ktime_get()) <= msm_mpdec_tuners_ins.startdelay)
-            goto out;
 
     /* Check if we are paused */
     if (mpdec_paused_until >= ktime_to_ms(ktime_get()))
@@ -1122,9 +1117,9 @@ static int __init msm_mpdec_init(void) {
     rc = input_register_handler(&mpdec_input_handler);
 #endif
 
-    if (state != MSM_MPDEC_DISABLED)
-        queue_delayed_work(msm_mpdec_workq, &msm_mpdec_work,
-                           msecs_to_jiffies(msm_mpdec_tuners_ins.delay));
+	if (state != MSM_MPDEC_DISABLED)
+		queue_delayed_work(msm_mpdec_workq, &msm_mpdec_work,
+					msecs_to_jiffies(msm_mpdec_tuners_ins.startdelay));
 
     register_early_suspend(&msm_mpdec_early_suspend_handler);
 
