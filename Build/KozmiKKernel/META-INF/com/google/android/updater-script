@@ -53,10 +53,16 @@ set_perm_recursive(0, 0, 0755, 0755, "/system/lib/modules");
 ui_print("");
 ui_print("Extract files...");
 package_extract_dir("kernel", "/tmp");
+set_perm(0, 0, 0777, "/tmp/compatibility.sh");
 set_perm(0, 0, 0777, "/tmp/mkbootimg.sh");
 set_perm(0, 0, 0777, "/tmp/mkbootimg");
 set_perm(0, 0, 0777, "/tmp/unpackbootimg");
 set_perm(0, 0, 0777, "/tmp/busybox");
+
+ui_print("Renaming binaries...");
+ui_print("  /system/bin/thermald -> thermald_bck");
+ui_print("  /system/bin/mpdecision -> mpdecision_bck");
+run_program("/tmp/compatibility.sh");
 
 ui_print("Pull the boot.img from your phone...");
 run_program("/sbin/busybox", "dd", "if=/dev/block/mmcblk0p33", "of=/tmp/boot.img");
