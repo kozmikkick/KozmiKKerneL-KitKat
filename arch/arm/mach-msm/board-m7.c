@@ -933,10 +933,6 @@ static struct htc_battery_platform_data htc_battery_pdev_data = {
 	.igauge.set_lower_voltage_alarm_threshold =
 						pm8xxx_batt_lower_alarm_threshold_set,
 	
-#ifdef CONFIG_THERMAL_TSENS8960
-	.get_thermal_sensor_temp = tsens_get_sensor_temp,
-#endif
-	
 #ifdef CONFIG_HTC_PNPMGR
 	.notify_pnpmgr_charging_enabled = pnpmgr_battery_charging_enabled,
 #endif 
@@ -3891,26 +3887,6 @@ static struct mdm_platform_data mdm_platform_data = {
 	.ramdump_timeout_ms = 120000,
 };
 
-static struct tsens_platform_data msm_tsens_pdata  = {
-		.slope			= {910, 910, 910, 910, 910},
-		.tsens_factor		= 1000,
-		.hw_type		= MSM_8960,
-		.tsens_num_sensor	= 5,
-};
-
-static struct platform_device msm_tsens_device = {
-	.name   = "tsens8960-tm",
-	.id = -1,
-};
-
-static struct msm_thermal_data msm_thermal_pdata = {
-	.sensor_id = 0,
-	.poll_ms = 250,
-	.limit_temp_degC = 80,
-	.temp_hysteresis_degC = 10,
-	.freq_step = 2,
-};
-
 static int __init check_dq_setup(char *str)
 {
 	int i = 0;
@@ -4808,7 +4784,6 @@ static struct platform_device *common_devices[] __initdata = {
 #endif
 	&msm8960_cpu_idle_device,
 	&msm8960_msm_gov_device,
-	&msm_tsens_device,
 	&msm_device_tz_log,
 	&apq8064_iommu_domain_device,
 #ifdef CONFIG_MSM_CACHE_ERP
@@ -5451,7 +5426,6 @@ static void __init m7_common_init(void)
 	int rc = 0;
 	struct kobject *properties_kobj;
 
-	msm_thermal_init(&msm_thermal_pdata);
 
 	if (socinfo_init() < 0)
 		pr_err("socinfo_init() failed!\n");
@@ -5589,7 +5563,8 @@ static void __init m7_allocate_memory_regions(void)
 static void __init m7_cdp_init(void)
 {
 	pr_info("%s: init starts\r\n", __func__);
-	msm_tsens_early_init(&msm_tsens_pdata);
+	tsens_tm_init_driver();
+	msm_thermal_device_init();
 	m7_common_init();
 	ethernet_init();
 	msm_rotator_set_split_iommu_domain();
