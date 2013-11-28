@@ -420,21 +420,23 @@ static void mpdec_input_callback(struct work_struct *unused) {
             boosted = true;
             cpufreq_cpu_put(cpu_policy);
             mutex_unlock(&per_cpu(msm_mpdec_cpudata, cpu).boost_mutex);
-        }
-    } else {
-        boosted = true;
-    }
-    if (boosted && !per_cpu(msm_mpdec_cpudata, cpu).revib_wq_running) {
-        per_cpu(msm_mpdec_cpudata, cpu).revib_wq_running = true;
-        queue_delayed_work_on(cpu,
-                              msm_mpdec_revib_workq,
-                              &per_cpu(msm_mpdec_revib_work, cpu),
+		}
+	} else {
+		boosted = true;
+	}
+	if (boosted && !per_cpu(msm_mpdec_cpudata, cpu).revib_wq_running) {
+		per_cpu(msm_mpdec_cpudata, cpu).revib_wq_running = true;
+		queue_delayed_work_on(
+					cpu,
+					msm_mpdec_revib_workq,
+					&per_cpu(msm_mpdec_revib_work, cpu),
 					msecs_to_jiffies(msm_mpdec_tuners_ins.boost_time)
-    } else if (boosted && per_cpu(msm_mpdec_cpudata, cpu).revib_wq_running) {
+					);
+	} else if (boosted && per_cpu(msm_mpdec_cpudata, cpu).revib_wq_running) {
 		per_cpu(msm_mpdec_cpudata, cpu).boost_until = ktime_to_ms(ktime_get()) + msm_mpdec_tuners_ins.boost_time;
-    }
+	}
 
-    return;
+	return;
 }
 
 #ifdef CONFIG_BRICKED_THERMAL

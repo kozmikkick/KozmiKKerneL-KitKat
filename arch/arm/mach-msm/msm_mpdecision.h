@@ -31,10 +31,10 @@
 #define MSM_MPDEC_IDLE_FREQ             486000
 #ifdef CONFIG_MSM_MPDEC_INPUTBOOST_CPUMIN
 #define MSM_MPDEC_BOOSTTIME             1000
-#define MSM_MPDEC_BOOSTFREQ_CPU0        960000
-#define MSM_MPDEC_BOOSTFREQ_CPU1        960000
-#define MSM_MPDEC_BOOSTFREQ_CPU2        729600
-#define MSM_MPDEC_BOOSTFREQ_CPU3        576000
+#define MSM_MPDEC_BOOSTFREQ_CPU0        1026000
+#define MSM_MPDEC_BOOSTFREQ_CPU1        1026000
+#define MSM_MPDEC_BOOSTFREQ_CPU2        810000
+#define MSM_MPDEC_BOOSTFREQ_CPU3        594000
 #endif
 
 enum {
@@ -47,6 +47,7 @@ enum {
 struct msm_mpdec_cpudata_t {
     struct mutex hotplug_mutex;
     int online;
+    int device_suspended;
     cputime64_t on_time;
     cputime64_t on_time_total;
     long long unsigned int times_cpu_hotplugged;
