@@ -3,7 +3,10 @@ cd ..
 export CROSS_COMPILE=arm-eabi- ARCH=arm SUBARM=arm
 make -j8 kozmik_defconfig
 make -j8
+cd kcontrol
+make
 now=$(date +"%Y%m%d_%H%M")
+cd ..
 
 # copy modules
 find arch -type f -name '*.ko' -exec cp -f {} Build/KozmiKKernel/modules \;
@@ -13,6 +16,7 @@ find drivers -type f -name '*.ko' -exec cp -f {} Build/KozmiKKernel/modules \;
 find fs -type f -name '*.ko' -exec cp -f {} Build/KozmiKKernel/modules \;
 find ipc -type f -name '*.ko' -exec cp -f {} Build/KozmiKKernel/modules \;
 find net -type f -name '*.ko' -exec cp -f {} Build/KozmiKKernel/modules \;
+find kcontrol -type f -name '*.ko' -exec cp -f {} Build/KozmiKKernel/modules \;
 
 cd Build
 cd ..
